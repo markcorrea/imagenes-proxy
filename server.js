@@ -1,31 +1,37 @@
-const express = require('express');
-const request = require('request');
+const express = require('express')
+const request = require('request')
 
-const app = express();
+const app = express()
 /* Defining CORS */
 app.use((req, res, next) => {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept, Authorization');
+  res.header('Access-Control-Allow-Origin', '*')
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  )
   if (req.method === 'OPTIONS') {
-    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET');
-    return res.status(200).json({});
+    res.header('Access-Control-Allow-Methods', 'PUT, POST, PATCH, DELETE, GET')
+    return res.status(200).json({})
   }
-  next();
-});
+  next()
+})
 
-
-app.get('/search', (req, res) => {
+app.get('/search/:term', (req, res) => {
+  const searchTerm = req.params.term
+  console.log(searchTerm);
   request(
-    { url: 'https://serpapi.com/search/?q=dog&engine=google&tbm=isch&tbs=itp:photos,isz:l' },
+    {
+      url: `https://serpapi.com/search/?q=${req.params.search}&engine=google&tbm=isch&tbs=itp:photos,isz:l`,
+    },
     (error, response, body) => {
       if (error || response.statusCode !== 200) {
-        return res.status(500).json({ type: 'error', message: err.message });
+        return res.status(500).json({ type: 'error', message: err.message })
       }
 
-      res.json(JSON.parse(body));
+      res.json(JSON.parse(body))
     }
   )
-});
+})
 
-const PORT = process.env.PORT || 3001;
-app.listen(PORT, () => console.log(`listening on ${PORT}`));
+const PORT = process.env.PORT || 3001
+app.listen(PORT, () => console.log(`listening on ${PORT}`))
