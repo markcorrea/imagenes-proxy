@@ -18,14 +18,13 @@ app.use((req, res, next) => {
 
 app.get('/search/:term', (req, res) => {
   const searchTerm = req.params.term
-  console.log(searchTerm);
   request(
     {
-      url: `https://serpapi.com/search/?q=${req.params.search}&engine=google&tbm=isch&tbs=itp:photos,isz:l`,
+      url: `https://serpapi.com/search?q=${searchTerm}&engine=google&tbm=isch&tbs=itp:photos,isz:l&api_key=911bfdea47a753b51ac67c510cd61b5b5e53ca36df583e990b68f5acd02d9ed5`,
     },
     (error, response, body) => {
       if (error || response.statusCode !== 200) {
-        return res.status(500).json({ type: 'error', message: err.message })
+        return res.status(500).json({ type: 'error', message: error })
       }
 
       res.json(JSON.parse(body))
